@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.meetime.hubspotintegration.dto.TokenResponse;
 import org.springframework.http.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -90,11 +91,16 @@ public class OAuthService {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
 
-        System.out.println("Contato criado com status: " + response.getStatusCode());
-        System.out.println("Resposta: " + response.getBody());
+            System.out.println("Contato criado com status: " + response.getStatusCode());
+            System.out.println("Resposta: " + response.getBody());
+
+        } catch (HttpClientErrorException e) {
+            throw e;
+        }
     }
 
     public String getContacts(String accessToken) {
