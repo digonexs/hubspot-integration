@@ -38,4 +38,11 @@ public class OAuthController {
         oauthService.createContact(request, token);
         return ResponseEntity.ok("Contato enviado para criação");
     }
+
+    @GetMapping("/contacts")
+    public ResponseEntity<String> getContacts(@RequestHeader("Authorization") String bearerToken) {
+        String token = bearerToken.replace("Bearer ", "");
+        String contactsJson = oauthService.getContacts(token);
+        return ResponseEntity.ok(contactsJson);
+    }
 }

@@ -18,6 +18,12 @@ import org.springframework.util.MultiValueMap;
 @Service
 public class OAuthService {
 
+    private final RestTemplate restTemplate;
+
+    public OAuthService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     @Value("${hubspot.oauth.client.id}")
     private String clientId;
 
@@ -89,5 +95,23 @@ public class OAuthService {
 
         System.out.println("Contato criado com status: " + response.getStatusCode());
         System.out.println("Resposta: " + response.getBody());
+    }
+
+    public String getContacts(String accessToken) {
+        String url = "https://api.hubapi.com/crm/v3/objects/contacts";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                String.class
+        );
+
+        return response.getBody();
     }
 }
