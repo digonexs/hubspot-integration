@@ -1,0 +1,101 @@
+{
+	"info": {
+		"_postman_id": "b9dcc3d3-11fe-4ad9-81b1-24e716f76557",
+		"name": "Meetime HubSpot Integration",
+		"description": "Coleção com todos os endpoints da API para testes do desafio técnico Meetime.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43587836"
+	},
+	"item": [
+		{
+			"name": "Criar contato",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"PrimeiroNome\",\n  \"lastName\": \"Sobrenome\",\n  \"email\": \"email_valido@teste.com\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/oauth/contacts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"oauth",
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar contatos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/oauth/contacts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"oauth",
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Webhook – simular contato criado",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"eventId\": 1,\n    \"subscriptionId\": 100,\n    \"portalId\": 123456,\n    \"appId\": 7891011,\n    \"occurredAt\": 1588346200000,\n    \"subscriptionType\": \"contact.creation\",\n    \"objectId\": 987654,\n    \"propertyName\": \"firstname\",\n    \"propertyValue\": \"João\",\n    \"changeSource\": \"CRM\",\n    \"eventType\": \"CREATION\"\n  }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/webhook/contact",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"webhook",
+						"contact"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
