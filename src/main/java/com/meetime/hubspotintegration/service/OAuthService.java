@@ -98,26 +98,34 @@ public class OAuthService {
             System.out.println("Contato criado com status: " + response.getStatusCode());
             System.out.println("Resposta: " + response.getBody());
 
+        } catch (HttpClientErrorException.Unauthorized ex) {
+            throw new RuntimeException("Token ausente ou inválido. Autentique-se e forneça um token válido.");
         } catch (HttpClientErrorException e) {
-            throw e;
+            throw new RuntimeException("Erro ao criar contato: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
         }
     }
 
     public String getContacts(String accessToken) {
-        String url = "https://api.hubapi.com/crm/v3/objects/contacts";
+        String url = "https://api.hubapi.com/crm/v3/objects/contacts?properties=firstname,lastname,email&limit=100";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                String.class
-        );
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    String.class
+            );
 
-        return response.getBody();
+            return response.getBody();
+        } catch (HttpClientErrorException.Unauthorized ex) {
+            throw new RuntimeException("Token ausente ou inválido. Autentique-se e forneça um token válido.");
+        } catch (HttpClientErrorException e) {
+            throw new RuntimeException("Erro ao listar contatos: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+        }
     }
 }
