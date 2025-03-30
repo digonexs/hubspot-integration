@@ -198,13 +198,11 @@ Durante o desenvolvimento deste projeto, tomei as seguintes decisões:
 
 #### Possíveis Melhorias Futuras:
 
-- **Centralizar tratamento de exceções** com um `GlobalExceptionHandler` funcional e compatível com Swagger (evitar o conflito anterior com `@ExceptionHandler` global).
+- **Centralizar tratamento de exceções** compatível com Swagger.
 - **Persistência em banco local** para guardar tokens e log de contatos criados.
 - **Renovação automática de token** (usando refresh token quando disponível).
-- **Melhor paginação** na listagem de contatos, com filtros e ordenações.
-- **Testes automatizados** de integração e cobertura de endpoints com `MockMvc` ou `RestAssured`.
-- **Criação de um client reutilizável para o HubSpot API**, encapsulando chamadas externas com um `RestTemplate` ou `WebClient`.
-- **Melhoria de documentação Swagger**, com exemplos de payloads nos endpoints (via `@ExampleObject`).
+- **Testes automatizados** de integração e cobertura de endpoints.
+- **Melhoria de documentação Swagger**, com exemplos de payloads nos endpoints.
 
 ---
 
