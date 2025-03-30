@@ -1,10 +1,13 @@
 package com.meetime.hubspotintegration.service;
 
+import com.meetime.hubspotintegration.dto.ContactRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.meetime.hubspotintegration.dto.TokenResponse;
 import org.springframework.http.*;
@@ -63,5 +66,28 @@ public class OAuthService {
         ResponseEntity<TokenResponse> response = restTemplate.postForEntity(tokenUrl, request, TokenResponse.class);
 
         return response.getBody();
+    }
+
+    public void createContact(ContactRequest contact, String accessToken) {
+        String url = "https://api.hubapi.com/crm/v3/objects/contacts";
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("email", contact.getEmail());
+        properties.put("firstname", contact.getFirstName());
+        properties.put("lastname", contact.getLastName());
+
+        Map<String, Object> requestBody = Map.of("properties", properties);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+
+        System.out.println("Contato criado com status: " + response.getStatusCode());
+        System.out.println("Resposta: " + response.getBody());
     }
 }
