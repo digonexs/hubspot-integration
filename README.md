@@ -10,8 +10,6 @@ O desafio propõe a criação de uma aplicação em **Java com Spring Boot** que
 - Listar os contatos já existentes;
 - Receber notificações via **Webhooks** quando contatos forem criados ou atualizados.
 
-Durante a resolução do desafio, buscou-se seguir fielmente todos os requisitos obrigatórios, além de aplicar **boas práticas de código**, segurança e clareza na organização do projeto.
-
 ---
 
 ## 🛠️ Tecnologias utilizadas
@@ -65,7 +63,7 @@ A aplicação atende todos os requisitos propostos no desafio, incluindo:
 
 - Java 21
 - Git
-- IntelliJ IDEA (recomendado)
+- IntelliJ IDEA
 - Ngrok
 - Postamn
 
@@ -154,9 +152,62 @@ Authorization: Bearer SEU_ACCESS_TOKEN
 
 ### Coleção Postman
 
+(`/arquivos/json_collections/Meetime HubSpot Integration.postman_collection.json`)
 
+- Para facilitar os testes da API, incluímos uma **coleção do Postman pronta** com todos os endpoints e exemplos de requisições.
+
+#### Como importar para o Postman:
+1. Abra o Postman
+2. Vá para **File > Import**
+3. Clique em **Upload Files**
+4. Selecione o arquivo `.json` localizado no caminho acima
+5. Clique em **Import**
+
+#### O que está incluso na coleção:
+- Criação de contatos com diferentes cenários (válido, inválido, sem token, campos nulos)
+- Listagem de contatos (com/sem token)
+- Simulação de Webhooks de criação e alteração de contato
 
 ---
 
 Pronto! A aplicação está pronta para testes reais com OAuth, API do HubSpot e Webhooks.
+
+---
+
+## 💻 Documentação Técnica
+
+#### Decisões Técnicas:
+
+Durante o desenvolvimento deste projeto, tomei as seguintes decisões:
+
+- **Clareza e simplicidade**: O objetivo foi manter o código legível e de fácil manutenção.
+- **Separação de responsabilidades**: Aplicamos a arquitetura em camadas (`Controller`, `Service`, `DTO`) para manter a organização e facilitar futuras evoluções.
+
+#### Tecnologias e Bibliotecas Utilizadas:
+
+| Tecnologia | Motivo                                                                          |
+|------------|---------------------------------------------------------------------------------|
+| **Spring Boot** | Framework principal para construção da API REST                                 |
+| **Spring Web** | Permite a criação de endpoints HTTP RESTful                                     |
+| **Spring Validation** | Usado para validar os dados dos DTOs (como email e campos obrigatórios)         |
+| **Springdoc OpenAPI** | Geração automática da documentação Swagger da API                               |
+| **Lombok** | Redução de boilerplate com geração automática de getters/setters e construtores |
+| **Ngrok** | Criação de túnel público para testes de Webhook local                           |
+| **Postman** | Plataforma de testes da API com diversos cenários mapeados                      |
+
+
+#### Possíveis Melhorias Futuras:
+
+- **Centralizar tratamento de exceções** com um `GlobalExceptionHandler` funcional e compatível com Swagger (evitar o conflito anterior com `@ExceptionHandler` global).
+- **Persistência em banco local** para guardar tokens e log de contatos criados.
+- **Renovação automática de token** (usando refresh token quando disponível).
+- **Melhor paginação** na listagem de contatos, com filtros e ordenações.
+- **Testes automatizados** de integração e cobertura de endpoints com `MockMvc` ou `RestAssured`.
+- **Criação de um client reutilizável para o HubSpot API**, encapsulando chamadas externas com um `RestTemplate` ou `WebClient`.
+- **Melhoria de documentação Swagger**, com exemplos de payloads nos endpoints (via `@ExampleObject`).
+
+---
+
+
+
 
