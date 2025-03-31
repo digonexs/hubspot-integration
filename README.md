@@ -65,7 +65,7 @@ A aplicação atende todos os requisitos propostos no desafio, incluindo:
 - Git
 - IntelliJ IDEA
 - Ngrok
-- Postamn
+- Postman
 
 ### 1. Criar uma conta e aplicativo no HubSpot
 
@@ -77,7 +77,7 @@ A aplicação atende todos os requisitos propostos no desafio, incluindo:
 ### 2. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/hubspot-integration.git
+git clone https://github.com/digonexs/hubspot-integration
 ```
 ```bash
 cd hubspot-integration
