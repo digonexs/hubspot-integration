@@ -226,6 +226,3 @@ Durante o desenvolvimento deste projeto, tomei as seguintes decisões:
 ---
 Desenvolvido por: [Rodrigo](https://www.linkedin.com/in/rodrigocavalcantedebarros/).
 ---
-
-
-
