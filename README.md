@@ -8,7 +8,7 @@ O desafio propõe a criação de uma aplicação em **Java com Spring Boot** que
 
 - Criar contatos em sua conta do HubSpot;
 - Listar os contatos já existentes;
-- Receber notificações via **Webhooks** quando contatos forem criados ou atualizados.
+- Receber notificações via **Webhooks** quando contatos forem criados.
 
 ---
 
@@ -21,7 +21,7 @@ A aplicação foi desenvolvida utilizando as seguintes tecnologias e bibliotecas
 - **Spring Boot** – Framework para desenvolvimento da API REST
 - **Spring Web** – Módulo para construção de endpoints RESTful
 - **Spring Security** – Utilizado de forma mínima para tratar redirecionamentos
-- **Lombok** – Reduz a verbosidade do código com anotações como `@Data` e `@Builder`
+- **Lombok** – Reduz a verbosidade do código com anotações
 - **RestTemplate** – Cliente HTTP para comunicação com a API da HubSpot
 - **OpenAPI (SpringDoc)** – Geração automática da documentação Swagger
 - **Jakarta Servlet API** – Usada para recebimento e leitura de payloads do Webhook
@@ -73,6 +73,7 @@ A aplicação atende todos os requisitos propostos no desafio, incluindo:
 2. Crie um App com Redirect URL: `http://localhost:8080/oauth/callback`
 3. Escopos: `crm.objects.contacts.read`, `crm.objects.contacts.write`, `crm.schemas.contacts.write`, `oauth`
 4. Copie o Client ID e Client Secret
+5. Crie uma conta de testes em: https://app.hubspot.com/developer-test-accounts/
 
 ### 2. Clonar o repositório
 
@@ -84,8 +85,9 @@ cd hubspot-integration
 ```
 ### 3. Configurar o application.properties
 
-1. Copie `application-example.properties` como `application.properties`
-2. Preencha com seu client.id e client.secret:
+1. Navegue até o seguinte caminho de pastas: `src/main/resources/application-example.properties`
+2. Renomeie o arquivo `application-example.properties` para `application.properties`
+3. Substitua `SEU_CLIENT_ID` e `SEU_CLIENT_SECRET` pelos valores de client.id e client.secret obtidos no seu app do HubSpot.
 
 ```properties
 hubspot.oauth.client.id=SEU_CLIENT_ID
@@ -95,6 +97,8 @@ hubspot.oauth.scope=crm.objects.contacts.read crm.objects.contacts.write crm.sch
 ```
 
 ### 4. Executar o projeto
+
+- Dentro da pasta raiz do projeto `hubspot-integration`, execute os seguintes comandos no terminal:
 
 ```bash
 ./mvnw clean install
@@ -106,16 +110,35 @@ hubspot.oauth.scope=crm.objects.contacts.read crm.objects.contacts.write crm.sch
 
 ### 5. Acessar Swagger
 
+- Com a aplicação em execução, acesse a seguinte URL em seu navegador:
+
 ```
 http://localhost:8080/swagger-ui.html
 ```
 
 ### 6. Ngrok para Webhooks
 
-1. Baixe e instale https://ngrok.com
-2. Autentique: `ngrok config add-authtoken SEU_TOKEN`
-3. Rode: `ngrok http 8080`
-4. Copie a URL e configure no app da HubSpot: `https://xxx.ngrok.io/webhook/contact`
+1. Baixe e instale: https://ngrok.com
+2. Em um terminal, autentique-se com o token da sua conta Ngrok (obtido em: https://dashboard.ngrok.com/get-started/your-authtoken):
+
+```bash
+ngrok config add-authtoken SEU_TOKEN_NGROK
+```
+
+3. Após a autenticação, execute o seguinte comando:
+
+```bash
+ngrok http 8080
+```
+
+4. Copie a URL fornecida pelo Ngrok na linha `Forwarding` (exemplo: `exemplo.ngrok-free.app`)
+5. Acesse o app que você criou no HubSpot
+6. No menu lateral esquerdo (dentro do App), vá até `Recursos` > `Webhooks`
+7. Em `URL de destino`, cole a URL fornecida pelo Ngrok, adicionando `/webhook/contact` ao final. Exemplo: `https://exemplo.ngrok-free.app/webhook/contact`. Em seguida, salve.
+8. Após salvar, clique em `Criar assinatura`.
+9. Preencha os campos conforme o exemplo da imagem abaixo:
+
+![Assinaturas Webhook HubSpot](arquivos/imagens/Assinaturas-webhook.png)
 
 ---
 
@@ -123,30 +146,9 @@ http://localhost:8080/swagger-ui.html
 
 ### Autenticar no HubSpot
 
-1. Acesse `http://localhost:8080/oauth/authorize-url` no navegador
-2. Copie a URL gerada, cole em uma novaguia e autorize o app
-3. Veja o access_token no terminal
-
-### Como usar o token
-
-```
-Authorization: Bearer SEU_ACCESS_TOKEN
-```
-
-### Testes
-
-| # | Cenário | Método | Endpoint |
-|--|---------|--------|----------|
-| 1 | Gerar URL de autorização | GET | `/oauth/authorize-url` |
-| 2 | Callback (code → token) | GET | `/oauth/callback` |
-| 3 | Criar contato válido | POST | `/oauth/contacts` |
-| 4 | Criar contato inválido | POST | `/oauth/contacts` |
-| 5 | Criar contato com campos nulos | POST | `/oauth/contacts` |
-| 6 | Criar contato sem token | POST | `/oauth/contacts` |
-| 7 | Listar contatos com token | GET | `/oauth/contacts` |
-| 8 | Listar contatos sem token | GET | `/oauth/contacts` |
-| 9 | Webhook: criação de contato | POST (HubSpot) | `/webhook/contact` |
-| 10 | Webhook: alteração de contato | POST (HubSpot) | `/webhook/contact` |
+1. Com a aplicação em execução, acesse http://localhost:8080/oauth/authorize-url no navegador.
+2. Copie a URL gerada, cole-a em uma nova guia, selecione sua conta de testes e autorize o app.
+3. O `access_token será exibido no terminal do IntelliJ.
 
 ---
 
@@ -154,7 +156,7 @@ Authorization: Bearer SEU_ACCESS_TOKEN
 
 (`/arquivos/json_collections/Meetime HubSpot Integration.postman_collection.json`)
 
-- Para facilitar os testes da API, incluímos uma **coleção do Postman pronta** com todos os endpoints e exemplos de requisições.
+- Para facilitar os testes da API, incluí uma **coleção do Postman pronta** com todos os endpoints e exemplos de requisições.
 
 #### Como importar para o Postman:
 1. Abra o Postman
@@ -167,6 +169,24 @@ Authorization: Bearer SEU_ACCESS_TOKEN
 - Criação de contatos com diferentes cenários (válido, inválido, sem token, campos nulos)
 - Listagem de contatos (com/sem token)
 - Simulação de Webhooks de criação e alteração de contato
+
+### Como usar o token
+
+- Para realizar os testes de criação (POST Criar contato) e listagem (GET Listar Contato), será necessário configurar os headers no Postman conforme o exemplo abaixo:
+
+- Key: `Authorization` Value: `Bearer SEU_ACCESS_TOKEN_GERADO_NO_TERMINAL`
+
+### Testes
+
+| # | Cenário                    | Método | Endpoint |
+|---|----------------------------|-------|----------|
+| 1 | Criar contato válido       | POST  | `localhost:8080/oauth/contacts` |
+| 2 | Criar contato com e-mail inválido | POST  | `localhost:8080/oauth/contacts` |
+| 3 | Criar contato com campos nulos | POST  | `localhost:8080/oauth/contacts` |
+| 4 | Criar contato com token incorreto | POST  | `localhost:8080/oauth/contacts` |
+| 5 | Listar contatos            | GET   | `localhost:8080/oauth/contacts` |
+| 6 | Listar contatos com token incorreto | GET   | `localhost:8080/oauth/contacts` |
+| 7 | Webhook: criação de contato | POST  | `localhost:8080/webhook/contact` |
 
 ---
 
@@ -181,7 +201,7 @@ Pronto! A aplicação está pronta para testes reais com OAuth, API do HubSpot e
 Durante o desenvolvimento deste projeto, tomei as seguintes decisões:
 
 - **Clareza e simplicidade**: O objetivo foi manter o código legível e de fácil manutenção.
-- **Separação de responsabilidades**: Aplicamos a arquitetura em camadas (`Controller`, `Service`, `DTO`) para manter a organização e facilitar futuras evoluções.
+- **Separação de responsabilidades**: Apliquei arquitetura em camadas (`Controller`, `Service`, `DTO`) para manter a organização e facilitar futuras evoluções.
 
 #### Tecnologias e Bibliotecas Utilizadas:
 
@@ -200,12 +220,12 @@ Durante o desenvolvimento deste projeto, tomei as seguintes decisões:
 
 - **Centralizar tratamento de exceções** compatível com Swagger.
 - **Persistência em banco local** para guardar tokens e log de contatos criados.
-- **Renovação automática de token** (usando refresh token quando disponível).
+- **Renovação automática de token**.
 - **Testes automatizados** de integração e cobertura de endpoints.
-- **Melhoria de documentação Swagger**, com exemplos de payloads nos endpoints.
 
 ---
-
+Desenvolvido por: [Rodrigo](https://www.linkedin.com/in/rodrigocavalcantedebarros/).
+---
 
 
 
