@@ -91,7 +91,7 @@ cd hubspot-integration
 hubspot.oauth.client.id=SEU_CLIENT_ID
 hubspot.oauth.client.secret=SEU_CLIENT_SECRET
 hubspot.oauth.redirect.uri=http://localhost:8080/oauth/callback
-hubspot.oauth.scopes=crm.objects.contacts.read crm.objects.contacts.write crm.schemas.contacts.write
+hubspot.oauth.scope=crm.objects.contacts.read crm.objects.contacts.write crm.schemas.contacts.write
 ```
 
 ### 4. Executar o projeto
